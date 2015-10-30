@@ -1,6 +1,7 @@
 var site = angular.module('site', ['ngRoute']);
 
 require('./controllers');
+require('./directives');//this was added
 require('./factories');
 
 site.config(['$routeProvider', function($routeProvider) {

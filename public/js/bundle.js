@@ -12,10 +12,49 @@ module.exports = function($scope){
     $scope.test = "[siteCtrl] testing if we wired everything right";
 }
 },{}],4:[function(require,module,exports){
+module.exports = [function(){
+    return {
+        replace : true,
+        scope :{},
+        template: "<canvas width=\"500\" height=\"500\"></canvas>",
+        link: function (scope, element, attribute) {
+            init();
+            
+            function init() {
+                scope.stage = new createjs.Stage(element[0]);
+                var circle = new createjs.Shape();
+                circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+                circle.x = 100;
+                circle.y = 100;
+                scope.stage.addChild(circle);
+                scope.stage.update();
+            }
+        }
+    }
+}];
+},{}],5:[function(require,module,exports){
+var app = angular.module('site');
+
+app.directive('roomlist', require('./roomList.js'));
+app.directive('game', require('./game.js'));
+},{"./game.js":4,"./roomList.js":6}],6:[function(require,module,exports){
+module.exports = ['socket', function(socket) {
+    return {
+        restrict: 'E',
+        replace: true,
+        scope: {},
+        templateUrl: function() {return 'partials/roomList.html?' +new Date()},
+        link: function (scope, element, attribute) {
+            //our room list code will go here
+            scope.rooms = [{name:"Lobby"}, {name:"game room"}, {name:"another game room"}];
+        }
+    };
+}]
+},{}],7:[function(require,module,exports){
 var app = angular.module('site');
 
 app.factory('socket', require('./socket'));
-},{"./socket":5}],5:[function(require,module,exports){
+},{"./socket":8}],8:[function(require,module,exports){
 module.exports = [
     '$rootScope', 
     function ($rootScope) {
@@ -55,10 +94,11 @@ module.exports = [
         };
     }
 ];
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var site = angular.module('site', ['ngRoute']);
 
 require('./controllers');
+require('./directives');//this was added
 require('./factories');
 
 site.config(['$routeProvider', function($routeProvider) {
@@ -76,4 +116,4 @@ site.config(['$routeProvider', function($routeProvider) {
             controller: 'gameCtrl'
         })
 }]);
-},{"./controllers":2,"./factories":4}]},{},[6]);
+},{"./controllers":2,"./directives":5,"./factories":7}]},{},[9]);
